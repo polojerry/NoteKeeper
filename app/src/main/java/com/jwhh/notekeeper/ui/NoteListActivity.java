@@ -12,8 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -39,14 +41,25 @@ public class NoteListActivity extends AppCompatActivity {
 
     private void initializeDisplayNotes() {
 
-        ListView noteList = findViewById(R.id.list_notes);
+        final ListView noteList = findViewById(R.id.list_notes);
+        final List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
-        List<NoteInfo> notes = DataManager.getInstance().getNotes();
         ArrayAdapter<NoteInfo> notesAdapter = new ArrayAdapter<>(
                 this,android.R.layout.simple_list_item_1,notes
         );
 
         noteList.setAdapter(notesAdapter);
+        noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
+
+                NoteInfo noteInfo = (NoteInfo)noteList.getItemAtPosition(position);
+                intent.putExtra(NoteActivity.NOTE_INFO, noteInfo);
+
+                startActivity(intent);
+            }
+        });
     }
 
 }
