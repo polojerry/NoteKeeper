@@ -7,9 +7,11 @@ import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.dataModels.NoteInfo;
 import com.jwhh.notekeeper.database.DataManager;
+import com.jwhh.notekeeper.viewModels.NoteActivityViewModel;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +31,15 @@ public class NoteActivity extends AppCompatActivity {
     private EditText mNoteTittle;
     private EditText mNoteText;
     private int mNewNotePosition;
-    private boolean mIsCalcelling;
+    private boolean mIsCancelling;
+
+    private NoteActivityViewModel mViewModel;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mViewModel.saveInstanceState(outState);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +52,19 @@ public class NoteActivity extends AppCompatActivity {
         mNoteTittle = findViewById(R.id.text_note_title);
         mNoteText = findViewById(R.id.text_note_text);
 
+        ViewModelProvider viewModelProvider = new ViewModelProvider(getViewModelStore(),
+                ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
+
+        mViewModel  = viewModelProvider.get(NoteActivityViewModel.class);
+
+        if(!mViewModel.isNewlyCreated && savedInstanceState!=null)
+            mViewModel.restoreSavedState(savedInstanceState);
+
+
+        mViewModel.isNewlyCreated = false;
+
         initializeDisplayValues();
+        saveOriginalDisplayValues();
 
         if(!mIsNewNote)
             displayValues(mSpinnerCourses, mNoteTittle, mNoteText);
@@ -54,6 +76,16 @@ public class NoteActivity extends AppCompatActivity {
         adapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerCourses.setAdapter(adapterCourses);
 
+    }
+
+    private void saveOriginalDisplayValues() {
+
+        if(mIsNewNote)
+            return;
+
+        mViewModel.mOriginalCourseId = mNote.getCourse().getCourseId();
+        mViewModel.mOriginalNoteTittle = mNote.getTitle();
+        mViewModel. mOriginalNoteText = mNote.getText();
     }
 
     private void displayValues(Spinner spinnerCourses, EditText noteTittle, EditText noteText) {
@@ -92,15 +124,23 @@ public class NoteActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if(mIsCalcelling){
+        if(mIsCancelling){
             if(mIsNewNote){
                 DataManager.getInstance().removeNote(mNewNotePosition);
+            }else{
+                restoreOriginalNoteState();
             }
 
         }else{
             saveNote();
         }
 
+    }
+
+    private void restoreOriginalNoteState() {
+        mNote.setCourse(DataManager.getInstance().getCourse(mViewModel.mOriginalCourseId));
+        mNote.setTitle(mViewModel.mOriginalNoteTittle);
+        mNote.setText(mViewModel.mOriginalNoteText);
     }
 
     private void saveNote() {
@@ -132,17 +172,11 @@ public class NoteActivity extends AppCompatActivity {
                 cancel();
                 break;
         }
-        /*//noinspection SimplifiableIfStatement
-        if (id == R.id.action_send_mail) {
-            sendMail();
-            return true;
-        }*/
-
         return super.onOptionsItemSelected(item);
     }
 
     private void cancel() {
-        mIsCalcelling = true;
+        mIsCancelling = true;
         finish();
     }
 
