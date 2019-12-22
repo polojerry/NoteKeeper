@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -54,8 +53,8 @@ public class NoteListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
 
-                NoteInfo noteInfo = (NoteInfo)noteList.getItemAtPosition(position);
-                intent.putExtra(NoteActivity.NOTE_INFO, noteInfo);
+                //NoteInfo noteInfo = (NoteInfo)noteList.getItemAtPosition(position);
+                intent.putExtra(NoteActivity.NOTE_POSITION, position);
 
                 startActivity(intent);
             }

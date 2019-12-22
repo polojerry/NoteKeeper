@@ -15,16 +15,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
 
-    public static final String NOTE_INFO = "com.jwhh.notekeeper.dataModels.NOTE_INFO";
+    public static final String NOTE_POSITION = "com.jwhh.notekeeper.dataModels.NOTE_POSITION";
+    public static final int POSITION_NOT_SET = -1;
     private NoteInfo mNote;
     private boolean mIsNewNote;
+    private Spinner mSpinnerCourses;
+    private EditText mNoteTittle;
+    private EditText mNoteText;
+    private int mNewNotePosition;
+    private boolean mIsCalcelling;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,21 +38,21 @@ public class NoteActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Spinner spinnerCourses = findViewById(R.id.spinner_courses);
-        EditText noteTittle = findViewById(R.id.text_note_title);
-        EditText noteText = findViewById(R.id.text_note_text);
+        mSpinnerCourses = findViewById(R.id.spinner_courses);
+        mNoteTittle = findViewById(R.id.text_note_title);
+        mNoteText = findViewById(R.id.text_note_text);
 
         initializeDisplayValues();
 
         if(!mIsNewNote)
-            displayValues(spinnerCourses, noteTittle, noteText);
+            displayValues(mSpinnerCourses, mNoteTittle, mNoteText);
 
-        
+
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
         ArrayAdapter<CourseInfo> adapterCourses =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, courses);
         adapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCourses.setAdapter(adapterCourses);
+        mSpinnerCourses.setAdapter(adapterCourses);
 
     }
 
@@ -64,10 +69,44 @@ public class NoteActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        NoteInfo noteInfo = intent.getParcelableExtra(NOTE_INFO);
-        mNote = noteInfo;
+        int notePosition = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
 
-        mIsNewNote = mNote == null;
+        mIsNewNote = notePosition == POSITION_NOT_SET;
+
+        if(mIsNewNote){
+            createNewNote();
+        }else{
+            mNote = DataManager.getInstance().getNotes().get(notePosition);
+        }
+
+    }
+
+    private void createNewNote() {
+        DataManager dataManager = DataManager.getInstance();
+        mNewNotePosition = dataManager.createNewNote();
+
+        mNote = dataManager.getNotes().get(mNewNotePosition);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if(mIsCalcelling){
+            if(mIsNewNote){
+                DataManager.getInstance().removeNote(mNewNotePosition);
+            }
+
+        }else{
+            saveNote();
+        }
+
+    }
+
+    private void saveNote() {
+        mNote.setCourse((CourseInfo)mSpinnerCourses.getSelectedItem());
+        mNote.setText(mNoteText.getText().toString());
+        mNote.setTitle(mNoteTittle.getText().toString());
     }
 
     @Override
@@ -84,11 +123,42 @@ public class NoteActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+
+            case R.id.action_send_mail:
+                sendMail();
+                break;
+            case R.id.action_cancel:
+                cancel();
+                break;
         }
+        /*//noinspection SimplifiableIfStatement
+        if (id == R.id.action_send_mail) {
+            sendMail();
+            return true;
+        }*/
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void cancel() {
+        mIsCalcelling = true;
+        finish();
+    }
+
+    private void sendMail() {
+
+        CourseInfo course =(CourseInfo) mSpinnerCourses.getSelectedItem();
+        String subject = mNoteTittle.getText().toString();
+        String textBody = "Check out what i learnt from Pluralsite Course \"" + "" +
+                course.getTitle() + " \" \n" + mNoteText.getText().toString();
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc2822");
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, textBody);
+
+        startActivity(intent);
+
     }
 }
