@@ -4,4 +4,6 @@
     <string name="note_activity">Edit Note</string>
     <string name="action_send_as_mail">Send as Mail</string>
     <string name="action_cancel">Cancel</string>
+    <string name="hint_note_tittle">Note Tittle</string>
+    <string name="hint_note_text">Note Text</string>
 </resources>

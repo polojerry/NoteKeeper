@@ -2,22 +2,21 @@ package com.jwhh.notekeeper.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.dataModels.NoteInfo;
 import com.jwhh.notekeeper.database.DataManager;
 import com.jwhh.notekeeper.viewModels.NoteActivityViewModel;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class NoteActivity extends AppCompatActivity {
     private Spinner mSpinnerCourses;
     private EditText mNoteTittle;
     private EditText mNoteText;
-    private int mNewNotePosition;
+    private int mNotePosition;
     private boolean mIsCancelling;
 
     private NoteActivityViewModel mViewModel;
@@ -101,23 +100,22 @@ public class NoteActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        int notePosition = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
+        mNotePosition = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
 
-        mIsNewNote = notePosition == POSITION_NOT_SET;
+        mIsNewNote = mNotePosition == POSITION_NOT_SET;
 
-        if(mIsNewNote){
+        if(mIsNewNote)
             createNewNote();
-        }else{
-            mNote = DataManager.getInstance().getNotes().get(notePosition);
-        }
+
+        mNote = DataManager.getInstance().getNotes().get(mNotePosition);
 
     }
 
     private void createNewNote() {
         DataManager dataManager = DataManager.getInstance();
-        mNewNotePosition = dataManager.createNewNote();
+        mNotePosition = dataManager.createNewNote();
 
-        mNote = dataManager.getNotes().get(mNewNotePosition);
+        mNote = dataManager.getNotes().get(mNotePosition);
     }
 
     @Override
@@ -126,7 +124,7 @@ public class NoteActivity extends AppCompatActivity {
 
         if(mIsCancelling){
             if(mIsNewNote){
-                DataManager.getInstance().removeNote(mNewNotePosition);
+                DataManager.getInstance().removeNote(mNotePosition);
             }else{
                 restoreOriginalNoteState();
             }
