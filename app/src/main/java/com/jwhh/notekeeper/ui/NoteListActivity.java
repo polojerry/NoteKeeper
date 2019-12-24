@@ -10,6 +10,8 @@ import com.jwhh.notekeeper.database.DataManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,7 +22,7 @@ import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
 
-    private ArrayAdapter<NoteInfo> mNotesAdapter;
+    /*private ArrayAdapter<NoteInfo> mNotesAdapter;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,12 @@ public class NoteListActivity extends AppCompatActivity {
 
     private void initializeDisplayNotes() {
 
-        final ListView noteList = findViewById(R.id.list_notes);
+        final RecyclerView notesRecycler = findViewById(R.id.list_notes);
+        final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(this);
+        notesRecycler.setLayoutManager(notesLayoutManager);
+
+
+        /*final ListView noteList = findViewById(R.id.list_notes);
         final List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
 
@@ -58,12 +65,12 @@ public class NoteListActivity extends AppCompatActivity {
                 intent.putExtra(NoteActivity.NOTE_POSITION, position);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mNotesAdapter.notifyDataSetChanged();
+        /* mNotesAdapter.notifyDataSetChanged(); */
     }
 }
