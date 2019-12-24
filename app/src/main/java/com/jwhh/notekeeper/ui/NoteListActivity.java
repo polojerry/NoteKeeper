@@ -7,6 +7,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.dataModels.NoteInfo;
 import com.jwhh.notekeeper.database.DataManager;
+import com.jwhh.notekeeper.recyclerView.NoteRecyclerAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
 
-    /*private ArrayAdapter<NoteInfo> mNotesAdapter;*/
+    private NoteRecyclerAdapter mNoteRecyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,29 +49,15 @@ public class NoteListActivity extends AppCompatActivity {
         final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(this);
         notesRecycler.setLayoutManager(notesLayoutManager);
 
+        List<NoteInfo> notes = DataManager.getInstance().getNotes();
+        mNoteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
+        notesRecycler.setAdapter(mNoteRecyclerAdapter);
 
-        /*final ListView noteList = findViewById(R.id.list_notes);
-        final List<NoteInfo> notes = DataManager.getInstance().getNotes();
-
-
-        mNotesAdapter = new ArrayAdapter<>(
-                this,android.R.layout.simple_list_item_1,notes
-        );
-
-        noteList.setAdapter(mNotesAdapter);
-        noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
-                intent.putExtra(NoteActivity.NOTE_POSITION, position);
-                startActivity(intent);
-            }
-        });*/
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        /* mNotesAdapter.notifyDataSetChanged(); */
+        mNoteRecyclerAdapter.notifyDataSetChanged();
     }
 }
