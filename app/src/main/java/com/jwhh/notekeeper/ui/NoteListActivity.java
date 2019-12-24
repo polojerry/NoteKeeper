@@ -45,6 +45,7 @@ public class NoteListActivity extends AppCompatActivity {
         final ListView noteList = findViewById(R.id.list_notes);
         final List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
+
         mNotesAdapter = new ArrayAdapter<>(
                 this,android.R.layout.simple_list_item_1,notes
         );
