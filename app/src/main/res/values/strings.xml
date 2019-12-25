@@ -7,4 +7,17 @@
     <string name="action_next">Next</string>
     <string name="hint_note_tittle">Note Tittle</string>
     <string name="hint_note_text">Note Text</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="menu_notes">Notes</string>
+    <string name="menu_courses">Courses</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="menu_group_communicate">Communicate</string>
 </resources>

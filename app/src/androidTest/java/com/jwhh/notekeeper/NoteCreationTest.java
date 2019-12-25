@@ -4,7 +4,7 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.database.DataManager;
-import com.jwhh.notekeeper.ui.NoteListActivity;
+import com.jwhh.notekeeper.ui.MainActivity;
 
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -35,8 +35,8 @@ public class NoteCreationTest {
 
     }
     @Rule
-    public ActivityTestRule<NoteListActivity> mNoteListActivityRule = new
-            ActivityTestRule<>(NoteListActivity.class);
+    public ActivityTestRule<MainActivity> mNoteListActivityRule = new
+            ActivityTestRule<>(MainActivity.class);
 
     @Test
     public void CreteNoteTest(){
