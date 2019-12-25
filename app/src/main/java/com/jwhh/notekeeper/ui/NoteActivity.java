@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -54,9 +55,9 @@ public class NoteActivity extends AppCompatActivity {
         ViewModelProvider viewModelProvider = new ViewModelProvider(getViewModelStore(),
                 ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
 
-        mViewModel  = viewModelProvider.get(NoteActivityViewModel.class);
+        mViewModel = viewModelProvider.get(NoteActivityViewModel.class);
 
-        if(!mViewModel.isNewlyCreated && savedInstanceState!=null)
+        if (!mViewModel.isNewlyCreated && savedInstanceState != null)
             mViewModel.restoreSavedState(savedInstanceState);
 
 
@@ -65,7 +66,7 @@ public class NoteActivity extends AppCompatActivity {
         initializeDisplayValues();
         saveOriginalDisplayValues();
 
-        if(!mIsNewNote)
+        if (!mIsNewNote)
             displayValues(mSpinnerCourses, mNoteTittle, mNoteText);
 
 
@@ -79,12 +80,12 @@ public class NoteActivity extends AppCompatActivity {
 
     private void saveOriginalDisplayValues() {
 
-        if(mIsNewNote)
+        if (mIsNewNote)
             return;
 
         mViewModel.mOriginalCourseId = mNote.getCourse().getCourseId();
         mViewModel.mOriginalNoteTittle = mNote.getTitle();
-        mViewModel. mOriginalNoteText = mNote.getText();
+        mViewModel.mOriginalNoteText = mNote.getText();
     }
 
     private void displayValues(Spinner spinnerCourses, EditText noteTittle, EditText noteText) {
@@ -104,7 +105,7 @@ public class NoteActivity extends AppCompatActivity {
 
         mIsNewNote = mNotePosition == POSITION_NOT_SET;
 
-        if(mIsNewNote)
+        if (mIsNewNote)
             createNewNote();
 
         mNote = DataManager.getInstance().getNotes().get(mNotePosition);
@@ -122,14 +123,14 @@ public class NoteActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if(mIsCancelling){
-            if(mIsNewNote){
+        if (mIsCancelling) {
+            if (mIsNewNote) {
                 DataManager.getInstance().removeNote(mNotePosition);
-            }else{
+            } else {
                 restoreOriginalNoteState();
             }
 
-        }else{
+        } else {
             saveNote();
         }
 
@@ -142,7 +143,7 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void saveNote() {
-        mNote.setCourse((CourseInfo)mSpinnerCourses.getSelectedItem());
+        mNote.setCourse((CourseInfo) mSpinnerCourses.getSelectedItem());
         mNote.setText(mNoteText.getText().toString());
         mNote.setTitle(mNoteTittle.getText().toString());
     }
@@ -161,7 +162,7 @@ public class NoteActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
 
             case R.id.action_send_mail:
                 sendMail();
@@ -169,8 +170,34 @@ public class NoteActivity extends AppCompatActivity {
             case R.id.action_cancel:
                 cancel();
                 break;
+            case R.id.action_next:
+                nextNote();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_next);
+
+        int lastNoteIndex = DataManager.getInstance().getNotes().size()-1;
+
+
+        item.setEnabled(mNotePosition< lastNoteIndex);
+
+        return super.onPrepareOptionsMenu(menu);
+
+    }
+
+    private void nextNote() {
+        mNotePosition+=1;
+        saveNote();
+
+        mNote = DataManager.getInstance().getNotes().get(mNotePosition);
+        saveOriginalDisplayValues();
+
+        displayValues(mSpinnerCourses,mNoteTittle,mNoteText);
+        invalidateOptionsMenu();
     }
 
     private void cancel() {
@@ -180,7 +207,7 @@ public class NoteActivity extends AppCompatActivity {
 
     private void sendMail() {
 
-        CourseInfo course =(CourseInfo) mSpinnerCourses.getSelectedItem();
+        CourseInfo course = (CourseInfo) mSpinnerCourses.getSelectedItem();
         String subject = mNoteTittle.getText().toString();
         String textBody = "Check out what i learnt from Pluralsite Course \"" + "" +
                 course.getTitle() + " \" \n" + mNoteText.getText().toString();

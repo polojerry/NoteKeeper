@@ -5,9 +5,16 @@
 
     <item
         android:id="@+id/action_cancel"
+        android:icon="@drawable/ic_revert_black_24dp"
         android:orderInCategory="100"
         android:title="@string/action_cancel"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/action_next"
+        android:icon="@drawable/ic_next_black_24dp"
+        android:orderInCategory="100"
+        android:title="@string/action_next"
+        app:showAsAction="always|withText" />
     <item
         android:id="@+id/action_send_mail"
         android:orderInCategory="100"
