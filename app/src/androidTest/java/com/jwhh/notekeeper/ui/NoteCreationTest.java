@@ -1,7 +1,9 @@
-package com.jwhh.notekeeper;
+package com.jwhh.notekeeper.ui;
 
+import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.rule.ActivityTestRule;
 
+import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.database.DataManager;
 import com.jwhh.notekeeper.ui.MainActivity;
@@ -45,7 +47,7 @@ public class NoteCreationTest {
         String noteText = "This is the typed note text";
 
 
-        onView(withId(R.id.fab)).perform(click());
+        onView(ViewMatchers.withId(R.id.fab)).perform(click());
 
         onView(withId(R.id.spinner_courses)).perform(click());
         onData(allOf(instanceOf(CourseInfo.class), equalTo(courseInfo))).perform(click());
