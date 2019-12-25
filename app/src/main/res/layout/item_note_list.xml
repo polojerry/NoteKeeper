@@ -17,12 +17,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="@color/pluralSightOrange"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_assignment_black_24dp" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/text_course_tittle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_notes"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Implicit Intents" />
 
@@ -30,11 +41,13 @@
                 android:id="@+id/text_note_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_notes"
                 app:layout_constraintTop_toBottomOf="@+id/text_course_tittle"
                 tools:text="Are used to launch intents with non predefined target" />
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -26,9 +28,9 @@ public class NoteActivity extends AppCompatActivity {
     public static final int POSITION_NOT_SET = -1;
     private NoteInfo mNote;
     private boolean mIsNewNote;
-    private Spinner mSpinnerCourses;
-    private EditText mNoteTittle;
-    private EditText mNoteText;
+    private AppCompatSpinner mSpinnerCourses;
+    private AppCompatEditText mNoteTittle;
+    private AppCompatEditText mNoteText;
     private int mNotePosition;
     private boolean mIsCancelling;
 

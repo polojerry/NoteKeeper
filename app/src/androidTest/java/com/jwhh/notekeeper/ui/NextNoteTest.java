@@ -24,7 +24,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.*;
 
 public class NextNoteTest {
 
@@ -40,7 +39,7 @@ public class NextNoteTest {
 
         onView(withId(R.id.list_item)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
-        int noteIndexPos = 0;
+        int noteIndexPos;
         List<NoteInfo> notes =  DataManager.getInstance().getNotes();
 
         for (noteIndexPos = 0; noteIndexPos<notes.size(); noteIndexPos++){
