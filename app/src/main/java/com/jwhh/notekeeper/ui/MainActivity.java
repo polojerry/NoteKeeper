@@ -1,6 +1,7 @@
 package com.jwhh.notekeeper.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -10,9 +11,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.view.GravityCompat;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.dataModels.NoteInfo;
@@ -24,11 +27,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -57,6 +62,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, NoteActivity.class));
             }
         });
+
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences,false);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -120,6 +127,22 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         mNoteRecyclerAdapter.notifyDataSetChanged();
+        updateNavHeader();
+    }
+
+    private void updateNavHeader() {
+        NavigationView navView = findViewById(R.id.nav_view);
+        View navHeader = navView.getHeaderView(0);
+
+        AppCompatTextView userName = navHeader.findViewById(R.id.nav_header_user_name);
+        AppCompatTextView userEmail = navHeader.findViewById(R.id.nav_header_email_address);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String user_name = preferences.getString("pref_display_name", "");
+        String email_address = preferences.getString("pref_email_address", "");
+
+        userName.setText(user_name);
+        userEmail.setText(email_address);
     }
 
     @Override
@@ -141,6 +164,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.action_settings){
+            startActivity(new Intent(MainActivity.this,SettingsActivity.class ));
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
         int itemId = menuItem.getItemId();
@@ -153,10 +184,10 @@ public class MainActivity extends AppCompatActivity
                 displayCourses();
                 break;
             case R.id.nav_share:
-                Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
+                handleMessage(R.string.share);
                 break;
             case R.id.nav_send:
-                Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
+                handleMessage(R.string.send);
                 break;
         }
 
@@ -165,4 +196,10 @@ public class MainActivity extends AppCompatActivity
 
         return true;
     }
+
+    private void handleMessage(int message) {
+        Snackbar.make(mRecyclerViewItems,message, Snackbar.LENGTH_LONG).show();
+    }
+
+
 }

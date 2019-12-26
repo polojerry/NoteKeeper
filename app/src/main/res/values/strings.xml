@@ -2,13 +2,17 @@
     <string name="app_name">NoteKeeper</string>
     <string name="action_settings">Settings</string>
     <string name="note_activity">Edit Note</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="action_send_as_mail">Send as Mail</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_next">Next</string>
+
     <string name="hint_note_tittle">Note Tittle</string>
     <string name="hint_note_text">Note Text</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
@@ -20,4 +24,38 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
     <string name="menu_group_communicate">Communicate</string>
+
+
+    <string name="pref_category_general">General</string>
+    <string name="pref_category_notifications">Notifications</string>
+
+    <string name="pref_title_display_name">Display Name</string>
+    <string name="pref_title_email_address">Email Address</string>
+    <string name="pref_title_favourite_social">Favourite Social Network</string>
+
+
+    <string name="pref_default_value_display_name">your name</string>
+    <string name="pref_default_value_email_address">yourname@yourhost.com</string>
+    <string name="pref_default_value_favourite_social">https://twitter.com</string>
+
+    <!--<string name="pref_category_general">General</string>
+    -->
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="share">Share</string>
+    <string name="send">Send</string>
+
 </resources>

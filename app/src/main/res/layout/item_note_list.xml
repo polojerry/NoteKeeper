@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                android:textAppearance="@style/CourseTitle"
                 app:layout_constraintStart_toEndOf="@+id/image_notes"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Implicit Intents" />

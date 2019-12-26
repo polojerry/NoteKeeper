@@ -1,5 +1,4 @@
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -17,4 +16,14 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="CourseTitle" parent="@android:style/TextAppearance.Material.Medium">
+        <item name="android:textColor">@color/pluralSightOrange</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="FabAdd" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="srcCompat">@drawable/ic_add_circle_black_24dp</item>
+        <item name="android:tint">@android:color/white</item>
+        <item name="backgroundTint">@color/pluralSightOrange</item>
+    </style>
 </resources>
