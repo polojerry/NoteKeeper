@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -43,7 +44,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         NoteInfo note = mNotes.get(position);
         holder.mCourseTitle.setText(note.getTitle());
         holder.mNoteTittle.setText(note.getText());
-        holder.notePosition = position;
+        holder.noteId = note.getId();
     }
 
     @Override
@@ -57,7 +58,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         final AppCompatTextView mCourseTitle;
         final AppCompatTextView mNoteTittle;
 
-        int notePosition;
+        int noteId;
 
         public NoteViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,8 +69,9 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     Intent startNoteActivity = new Intent(mContext, NoteActivity.class);
-                    startNoteActivity.putExtra(NoteActivity.NOTE_POSITION, notePosition);
+                    startNoteActivity.putExtra(NoteActivity.NOTE_ID, noteId);
                     mContext.startActivity(startNoteActivity);
 
                 }

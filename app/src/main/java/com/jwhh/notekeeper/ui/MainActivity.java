@@ -82,6 +82,12 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDbOpenHelper.close();
+    }
+
     private void initializeDisplayNotes() {
         DataManager.getInstance().loadFromDatabase(mDbOpenHelper);
 
