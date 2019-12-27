@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -30,9 +31,12 @@ public class NoteActivity extends AppCompatActivity {
     public static final int ID_NOT_SET = -1;
     private NoteInfo mNote;
     private boolean mIsNewNote;
+
     private AppCompatSpinner mSpinnerCourses;
     private AppCompatEditText mNoteTittle;
     private AppCompatEditText mNoteText;
+
+
     private int mNoteId;
     private boolean mIsCancelling;
 
@@ -77,7 +81,7 @@ public class NoteActivity extends AppCompatActivity {
         mViewModel.isNewlyCreated = false;
 
         initializeDisplayValues();
-        saveOriginalDisplayValues();
+        //saveOriginalDisplayValues();
 
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
         ArrayAdapter<CourseInfo> adapterCourses =
@@ -136,9 +140,16 @@ public class NoteActivity extends AppCompatActivity {
 
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
         CourseInfo course = DataManager.getInstance().getCourse(courseId);
-        int courseIndex = courses.indexOf(course);
+        final int courseIndex = courses.indexOf(course);
 
-        mSpinnerCourses.setSelection(courseIndex);
+
+        mSpinnerCourses.post(new Runnable() {
+            @Override
+            public void run() {
+                mSpinnerCourses.setSelection(courseIndex);
+            }
+        });
+
         mNoteTittle.setText(noteTittle);
         mNoteText.setText(noteText);
     }
@@ -151,14 +162,14 @@ public class NoteActivity extends AppCompatActivity {
 
         mIsNewNote = mNoteId == ID_NOT_SET;
 
-        if (mIsNewNote)
+
+        if (mIsNewNote) {
             createNewNote();
-
-        if (!mIsNewNote)
+        }else{
             loadNoteData();
+        }
 
-
-    }
+   }
 
     private void createNewNote() {
         DataManager dataManager = DataManager.getInstance();
