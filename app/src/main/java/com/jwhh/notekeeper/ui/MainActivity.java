@@ -20,6 +20,7 @@ import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.dataModels.NoteInfo;
 import com.jwhh.notekeeper.database.DataManager;
+import com.jwhh.notekeeper.database.NoteKeeperOpenHelper;
 import com.jwhh.notekeeper.recyclerView.CourseRecyclerAdapter;
 import com.jwhh.notekeeper.recyclerView.NoteRecyclerAdapter;
 
@@ -33,8 +34,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -46,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager mNotesLayoutManager;
     private GridLayoutManager mCoursesLayoutManager;
     private CourseRecyclerAdapter mCourseRecyclerAdapter;
+    private NoteKeeperOpenHelper mDbOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mDbOpenHelper = new NoteKeeperOpenHelper(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private void initializeDisplayNotes() {
+        DataManager.getInstance().loadFromDatabase(mDbOpenHelper);
 
         mRecyclerViewItems = findViewById(R.id.list_item);
 
@@ -104,8 +107,6 @@ public class MainActivity extends AppCompatActivity
         mRecyclerViewItems.setLayoutManager(mNotesLayoutManager);
 
         setChecked(R.id.nav_notes);
-
-
     }
 
     private void displayCourses() {

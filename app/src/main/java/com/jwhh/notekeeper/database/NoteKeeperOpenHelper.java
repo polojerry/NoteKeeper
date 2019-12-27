@@ -6,12 +6,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-public class NotekeeperOpenHelper extends SQLiteOpenHelper {
+public class NoteKeeperOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "NoteKeeper.db";
     public static final int DATABASE_VERSION = 1;
 
-    public NotekeeperOpenHelper(@Nullable Context context) {
+    public NoteKeeperOpenHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -22,7 +22,8 @@ public class NotekeeperOpenHelper extends SQLiteOpenHelper {
 
         DatabaseDataWorker worker = new DatabaseDataWorker(db);
         worker.insertCourses();
-        worker.insertCourses();
+        worker.insertSampleNotes();
+
 
     }
 
