@@ -96,7 +96,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mAdapterSpinnerCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerCourses.setAdapter(mAdapterSpinnerCourses);
-        
+
         LoaderManager.getInstance(this).initLoader(LOADER_COURSES, null, this);
         initializeDisplayValues();
 

@@ -19,6 +19,10 @@ public class NoteKeeperDatabaseContract {
                         +_ID + " INTEGER PRIMARY KEY, "
                         + COLUMN_COURSE_ID + " TEXT UNIQUE NOT NULL, "
                         + COLUMN_COURSE_TITLE + " TEXT NOT NULL)";
+
+        public static String getQName(String columnName){
+            return TABLE_NAME + "." + columnName;
+        }
     }
 
     public static final class NoteInfoEntry implements BaseColumns{
@@ -36,5 +40,9 @@ public class NoteKeeperDatabaseContract {
                         + COLUMN_COURSE_ID + " TEXT NOT NULL, "
                         + COLUMN_NOTE_TITLE + " TEXT NOT NULL, "
                         + COLUMN_NOTE_TEXT + ")";
+
+        public static String getQName(String columnName){
+            return TABLE_NAME + "." + columnName;
+        }
     }
 }

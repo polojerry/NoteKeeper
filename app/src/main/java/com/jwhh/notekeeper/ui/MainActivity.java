@@ -22,6 +22,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.database.DataManager;
+import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract;
+import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperOpenHelper;
 import com.jwhh.notekeeper.recyclerView.CourseRecyclerAdapter;
@@ -230,16 +232,24 @@ public class MainActivity extends AppCompatActivity
             @Override
             public Cursor loadInBackground() {
                 SQLiteDatabase database = mDbOpenHelper.getReadableDatabase();
+
                 final String[] columnNotes = {
                         NoteInfoEntry.COLUMN_NOTE_TITLE,
                         NoteInfoEntry.COLUMN_NOTE_TEXT,
-                        NoteInfoEntry.COLUMN_COURSE_ID,
-                        NoteInfoEntry._ID
+                        NoteInfoEntry.getQName(NoteInfoEntry._ID),
+                        CourseInfoEntry.COLUMN_COURSE_TITLE
                 };
-                String notesSortOrder = NoteInfoEntry.COLUMN_NOTE_TITLE + ", " + NoteInfoEntry.COLUMN_COURSE_ID + " ASC";
+
+                String notesSortOrder = CourseInfoEntry.COLUMN_COURSE_TITLE + ", " + NoteInfoEntry.COLUMN_NOTE_TITLE + " ASC";
+
+                String joinTables = NoteInfoEntry.TABLE_NAME  + " JOIN " + CourseInfoEntry.TABLE_NAME
+                        + " ON " +
+                        NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID)
+                        + "=" +
+                        CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_ID) ;
 
 
-                return database.query(NoteInfoEntry.TABLE_NAME, columnNotes,
+                return database.query(joinTables, columnNotes,
                         null, null, null, null, notesSortOrder);
             }
         };
