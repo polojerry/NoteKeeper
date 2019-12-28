@@ -23,6 +23,12 @@ public class NoteKeeperDatabaseContract {
         public static String getQName(String columnName){
             return TABLE_NAME + "." + columnName;
         }
+
+        public static final String INDEX1 = TABLE_NAME + "_index1";
+
+        public static final String SQL_CREATE_INDEX_1 = "CREATE INDEX " + INDEX1 + " ON " +
+                TABLE_NAME + " ( " + COLUMN_COURSE_TITLE +" )";
+
     }
 
     public static final class NoteInfoEntry implements BaseColumns{
@@ -44,5 +50,10 @@ public class NoteKeeperDatabaseContract {
         public static String getQName(String columnName){
             return TABLE_NAME + "." + columnName;
         }
+
+        public static final String INDEX1 = TABLE_NAME + "_index1";
+
+        public static final String SQL_CREATE_INDEX_1 = "CREATE INDEX " + INDEX1 + " ON " +
+                TABLE_NAME + " ( " + COLUMN_NOTE_TITLE +" )";
     }
 }
