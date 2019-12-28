@@ -45,8 +45,6 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
 
 
     public void swapCursor(Cursor cursor){
-        if(mCursor != null)
-            mCursor.close();
 
         mCursor = cursor;
         populateColumnPositions();

@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.view.GravityCompat;
@@ -32,6 +33,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -43,7 +47,7 @@ import java.time.Instant;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
     private NoteRecyclerAdapter mNoteRecyclerAdapter;
     private RecyclerView mRecyclerViewItems;
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     private GridLayoutManager mCoursesLayoutManager;
     private CourseRecyclerAdapter mCourseRecyclerAdapter;
     private NoteKeeperOpenHelper mDbOpenHelper;
+    private int LOADER_NOTES = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +75,11 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        PreferenceManager.setDefaultValues(this, R.xml.root_preferences,false);
+        PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         );
 
         drawer.setDrawerListener(toggle);
@@ -127,7 +132,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     private void setChecked(int id) {
         NavigationView navigationView = findViewById(R.id.nav_view);
         Menu menu = navigationView.getMenu();
@@ -137,21 +141,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        loadNotes();
+        //loadNotes();
+
+        LoaderManager.getInstance(this).restartLoader(LOADER_NOTES, null, this);
         updateNavHeader();
     }
 
     private void loadNotes() {
 
-        SQLiteDatabase database = mDbOpenHelper.getReadableDatabase()
-                ;
+        SQLiteDatabase database = mDbOpenHelper.getReadableDatabase();
         final String[] columnNotes = {
                 NoteInfoEntry.COLUMN_NOTE_TITLE,
                 NoteInfoEntry.COLUMN_NOTE_TEXT,
                 NoteInfoEntry.COLUMN_COURSE_ID,
                 NoteInfoEntry._ID
         };
-        String notesSortOrder = NoteInfoEntry.COLUMN_NOTE_TITLE + ", " + NoteInfoEntry.COLUMN_COURSE_ID  +" ASC" ;
+        String notesSortOrder = NoteInfoEntry.COLUMN_NOTE_TITLE + ", " + NoteInfoEntry.COLUMN_COURSE_ID + " ASC";
 
 
         Cursor notesCursor = database.query(NoteInfoEntry.TABLE_NAME, columnNotes,
@@ -180,13 +185,14 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if(drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else{
+        } else {
             super.onBackPressed();
         }
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -196,8 +202,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.action_settings){
-            startActivity(new Intent(MainActivity.this,SettingsActivity.class ));
+        if (item.getItemId() == R.id.action_settings) {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -207,7 +213,7 @@ public class MainActivity extends AppCompatActivity
 
         int itemId = menuItem.getItemId();
 
-        switch(itemId){
+        switch (itemId) {
             case R.id.nav_notes:
                 displayNotes();
                 break;
@@ -229,8 +235,52 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleMessage(int message) {
-        Snackbar.make(mRecyclerViewItems,message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(mRecyclerViewItems, message, Snackbar.LENGTH_LONG).show();
     }
 
 
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        CursorLoader loader = null;
+        if (id == LOADER_NOTES) {
+            loader = createNotesLoader();
+        }
+        return loader;
+    }
+
+    private CursorLoader createNotesLoader() {
+        return new CursorLoader(this){
+            @Override
+            public Cursor loadInBackground() {
+                SQLiteDatabase database = mDbOpenHelper.getReadableDatabase();
+                final String[] columnNotes = {
+                        NoteInfoEntry.COLUMN_NOTE_TITLE,
+                        NoteInfoEntry.COLUMN_NOTE_TEXT,
+                        NoteInfoEntry.COLUMN_COURSE_ID,
+                        NoteInfoEntry._ID
+                };
+                String notesSortOrder = NoteInfoEntry.COLUMN_NOTE_TITLE + ", " + NoteInfoEntry.COLUMN_COURSE_ID + " ASC";
+
+
+                return database.query(NoteInfoEntry.TABLE_NAME, columnNotes,
+                        null, null, null, null, notesSortOrder);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        if(loader.getId() ==LOADER_NOTES){
+            mNoteRecyclerAdapter.swapCursor(data);
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        if(loader.getId() == LOADER_NOTES){
+            mNoteRecyclerAdapter.swapCursor(null);
+        }
+    }
 }
