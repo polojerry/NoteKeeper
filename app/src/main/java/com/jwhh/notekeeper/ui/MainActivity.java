@@ -20,6 +20,8 @@ import androidx.core.view.GravityCompat;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.jwhh.notekeeper.R;
+import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract;
+import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Notes;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.database.DataManager;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract;
@@ -228,36 +230,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     private CursorLoader createNotesLoader() {
-        return new CursorLoader(this){
-            @Override
-            public Cursor loadInBackground() {
-                SQLiteDatabase database = mDbOpenHelper.getReadableDatabase();
 
-                final String[] columnNotes = {
-                        NoteInfoEntry.COLUMN_NOTE_TITLE,
-                        NoteInfoEntry.COLUMN_NOTE_TEXT,
-                        NoteInfoEntry.getQName(NoteInfoEntry._ID),
-                        CourseInfoEntry.COLUMN_COURSE_TITLE
-                };
-
-                String notesSortOrder = CourseInfoEntry.COLUMN_COURSE_TITLE + ", " + NoteInfoEntry.COLUMN_NOTE_TITLE + " ASC";
-
-                String joinTables = NoteInfoEntry.TABLE_NAME  + " JOIN " + CourseInfoEntry.TABLE_NAME
-                        + " ON " +
-                        NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID)
-                        + "=" +
-                        CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_ID) ;
-
-
-                return database.query(joinTables, columnNotes,
-                        null, null, null, null, notesSortOrder);
-            }
+        final String[] columnNotes = {
+                Notes.COLUMN_NOTE_TITLE,
+                Notes._ID,
+                Notes.COLUMN_COURSE_TITLE
         };
+
+        String notesSortOrder = CourseInfoEntry.COLUMN_COURSE_TITLE + ", " + NoteInfoEntry.COLUMN_NOTE_TITLE + " ASC";
+
+        return new CursorLoader(this, Notes.CONTENT_URI_EXPANDED,
+                columnNotes, null, null, notesSortOrder);
+
+
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        if(loader.getId() ==LOADER_NOTES){
+        if (loader.getId() == LOADER_NOTES) {
             mNoteRecyclerAdapter.swapCursor(data);
         }
 
@@ -265,7 +255,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-        if(loader.getId() == LOADER_NOTES){
+        if (loader.getId() == LOADER_NOTES) {
             mNoteRecyclerAdapter.swapCursor(null);
         }
     }

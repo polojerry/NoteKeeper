@@ -24,6 +24,8 @@ import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
 import com.jwhh.notekeeper.R;
+import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract;
+import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Courses;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.dataModels.NoteInfo;
 import com.jwhh.notekeeper.database.DataManager;
@@ -373,15 +375,14 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private CursorLoader createCoursesLoader() {
         mLoadCourseFinished = false;
 
-        Uri coursesUri = Uri.parse("content://com.jwhh.notekeeper.provider");
+        Uri coursesUri = Courses.CONTENT_URI;
         String[] courseColumns = {
-                CourseInfoEntry.COLUMN_COURSE_TITLE,
-                CourseInfoEntry.COLUMN_COURSE_ID,
-                CourseInfoEntry._ID
+                Courses.COLUMN_COURSE_TITLE,
+                Courses.COLUMN_COURSE_ID,
+                Courses._ID
         };
 
-
-        return new CursorLoader(this,coursesUri,courseColumns,null,null,CourseInfoEntry.COLUMN_COURSE_TITLE);
+        return new CursorLoader(this,coursesUri,courseColumns,null,null,Courses.COLUMN_COURSE_TITLE);
     }
 
     private CursorLoader createNotesLoader() {
