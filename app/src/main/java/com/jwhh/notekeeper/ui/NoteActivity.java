@@ -303,6 +303,10 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             case R.id.action_cancel:
                 cancel();
                 break;
+            case R.id.action_delete:
+                deleteNoteFromDatabase();
+                finish();
+                break;
             case R.id.action_next:
                 nextNote();
         }
