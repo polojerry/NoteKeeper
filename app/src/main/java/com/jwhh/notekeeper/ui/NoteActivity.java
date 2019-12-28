@@ -124,20 +124,29 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void saveNoteToDatabase(String course_id, String note_title, String note_text){
-        SQLiteDatabase database = mNoteKeeperOpenHelper.getWritableDatabase();
 
-        String selection = NoteInfoEntry._ID  + " = ?";
-        String[] selectionArgs = {
+
+        final String selection = NoteInfoEntry._ID  + " = ?";
+        final String[] selectionArgs = {
                 Integer.toString(mNoteId)
         };
 
-        ContentValues values = new ContentValues();
+        final ContentValues values = new ContentValues();
         values.put(NoteInfoEntry.COLUMN_COURSE_ID, course_id);
         values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, note_title);
         values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, note_text);
 
-        database.update(NoteInfoEntry.TABLE_NAME,values,selection,selectionArgs);
 
+        @SuppressLint("StaticFieldLeak")
+        AsyncTask task = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                SQLiteDatabase database = mNoteKeeperOpenHelper.getWritableDatabase();
+                database.update(NoteInfoEntry.TABLE_NAME,values,selection,selectionArgs);
+                return null;
+            }
+        };
+        task.execute();
 
     }
 
