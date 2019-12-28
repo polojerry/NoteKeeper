@@ -21,9 +21,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
-import com.jwhh.notekeeper.dataModels.NoteInfo;
 import com.jwhh.notekeeper.database.DataManager;
-import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperOpenHelper;
 import com.jwhh.notekeeper.recyclerView.CourseRecyclerAdapter;
@@ -43,7 +41,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
 
-import java.time.Instant;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -141,29 +138,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        //loadNotes();
-
         LoaderManager.getInstance(this).restartLoader(LOADER_NOTES, null, this);
         updateNavHeader();
-    }
-
-    private void loadNotes() {
-
-        SQLiteDatabase database = mDbOpenHelper.getReadableDatabase();
-        final String[] columnNotes = {
-                NoteInfoEntry.COLUMN_NOTE_TITLE,
-                NoteInfoEntry.COLUMN_NOTE_TEXT,
-                NoteInfoEntry.COLUMN_COURSE_ID,
-                NoteInfoEntry._ID
-        };
-        String notesSortOrder = NoteInfoEntry.COLUMN_NOTE_TITLE + ", " + NoteInfoEntry.COLUMN_COURSE_ID + " ASC";
-
-
-        Cursor notesCursor = database.query(NoteInfoEntry.TABLE_NAME, columnNotes,
-                null, null, null, null, notesSortOrder);
-
-        mNoteRecyclerAdapter.swapCursor(notesCursor);
-
     }
 
     private void updateNavHeader() {

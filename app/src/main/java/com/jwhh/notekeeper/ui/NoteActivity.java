@@ -96,8 +96,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mAdapterSpinnerCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerCourses.setAdapter(mAdapterSpinnerCourses);
-
-        //loadCoursesData();
+        
         LoaderManager.getInstance(this).initLoader(LOADER_COURSES, null, this);
         initializeDisplayValues();
 
@@ -108,45 +107,6 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         }
 
-
-    }
-
-    private void loadCoursesData() {
-        SQLiteDatabase database = mNoteKeeperOpenHelper.getReadableDatabase();
-
-        String[] courseColumns = {
-                CourseInfoEntry.COLUMN_COURSE_TITLE,
-                CourseInfoEntry.COLUMN_COURSE_ID,
-                CourseInfoEntry._ID
-        };
-
-        Cursor cursorCourses = database.query(CourseInfoEntry.TABLE_NAME, courseColumns,
-                null, null, null, null, null);
-
-        mAdapterSpinnerCourses.swapCursor(cursorCourses);
-    }
-
-    private void loadNoteData() {
-        SQLiteDatabase database = mNoteKeeperOpenHelper.getReadableDatabase();
-
-        String[] columnsNotes = {
-                NoteInfoEntry.COLUMN_COURSE_ID,
-                NoteInfoEntry.COLUMN_NOTE_TITLE,
-                NoteInfoEntry.COLUMN_NOTE_TEXT,
-                NoteInfoEntry._ID
-
-        };
-
-        String selection = NoteInfoEntry._ID + "= ?";
-
-        String[] selectionArgs = {Integer.toString(mNoteId)};
-
-        mNoteCursor = database.query(NoteInfoEntry.TABLE_NAME,
-                columnsNotes, selection, selectionArgs,
-                null, null, null, null);
-        mNoteCursor.moveToNext();
-
-        displayNote();
 
     }
 
@@ -302,8 +262,6 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mNote = DataManager.getInstance().getNotes().get(mNoteId);
         saveOriginalDisplayValues();
-
-        //displayNotes();
         invalidateOptionsMenu();
     }
 
