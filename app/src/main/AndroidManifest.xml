@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <provider
+            android:name=".contentProvider.NoteKeeperProvider"
+            android:authorities="com.jwhh.notekeeper.provider"
+            android:enabled="true"
+            android:exported="true"></provider>
+
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings"
