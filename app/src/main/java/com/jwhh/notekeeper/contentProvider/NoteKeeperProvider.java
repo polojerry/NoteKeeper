@@ -12,6 +12,7 @@ import android.provider.BaseColumns;
 
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Courses;
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Notes;
+import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.dataModels.NoteInfo;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.CourseInfoEntry;
@@ -44,8 +45,36 @@ public class NoteKeeperProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Implement this to handle requests to delete one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+
+        SQLiteDatabase database = mOpenHelper.getWritableDatabase();
+        int deletedRow = 0;
+
+        int match = sUriMatcher.match(uri);
+
+        switch(match){
+            case COURSES:
+
+                break;
+            case NOTES:
+
+                deletedRow = database.delete(NoteInfoEntry.TABLE_NAME,null, null);
+
+
+                break;
+            case NOTES_ROW:
+                long parsedId = ContentUris.parseId(uri);
+                String notesRowSelection = Notes._ID + " = ?" ;
+                String[] notesRowSelectionArgs = {
+                        Long.toString(parsedId)
+                };
+
+                deletedRow = database.delete(NoteInfoEntry.TABLE_NAME,notesRowSelection, notesRowSelectionArgs);
+
+
+                break;
+        }
+
+        return deletedRow;
     }
 
     @Override
@@ -184,7 +213,43 @@ public class NoteKeeperProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+        int rowsUpdated = 0;
+
+        SQLiteDatabase database = mOpenHelper.getWritableDatabase();
+
+        long parsedId = ContentUris.parseId(uri);
+
+        int match = sUriMatcher.match(uri);
+
+        switch (match){
+
+            case COURSES:
+                String courseRowSelection = Courses._ID + " = ?";
+                String[] courseRowSelectionArgs  = {
+                        Long.toString(parsedId)
+                };
+
+                rowsUpdated = database.update(CourseInfoEntry.TABLE_NAME,values,courseRowSelection,courseRowSelectionArgs);
+
+
+                break;
+            case NOTES:
+                break;
+            case NOTES_ROW:
+                String noteRowSelection = Notes._ID + " = ?";
+                String[] noteRowSelectionArgs  = {
+                        Long.toString(parsedId)
+                };
+
+                rowsUpdated = database.update(NoteInfoEntry.TABLE_NAME,values,noteRowSelection,noteRowSelectionArgs);
+                break;
+
+            case NOTES_EXPANDED:
+                break;
+
+        }
+
+
+        return rowsUpdated;
     }
 }

@@ -58,5 +58,6 @@
     <string name="share">Share</string>
     <string name="send">Send</string>
     <string name="action_delete">Delete</string>
+    <string name="action_delete_notes">Delete Notes</string>
 
 </resources>

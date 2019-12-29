@@ -1,9 +1,12 @@
 package com.jwhh.notekeeper.ui;
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,6 +47,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -182,10 +186,27 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
+
+        int id = item.getItemId();
+        if ( id== R.id.action_settings) {
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        }else if(id == R.id.action_delete_notes){
+            deleteNotesFromDatabase();
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteNotesFromDatabase() {
+        int deletedRows = getContentResolver().delete(Notes.CONTENT_URI,null,null);
+
+        if(deletedRows>=1){
+            Toast.makeText(this, "Deleted All Notes", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Failed to delete Notes...", Toast.LENGTH_SHORT).show();
+        }
+
+        LoaderManager.getInstance(this).restartLoader(LOADER_NOTES, null, this);
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +26,6 @@ import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
 import com.jwhh.notekeeper.R;
-import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract;
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Courses;
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Notes;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
@@ -131,28 +131,14 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
     public void saveNoteToDatabase(String course_id, String note_title, String note_text) {
 
-
-        final String selection = NoteInfoEntry._ID + " = ?";
-        final String[] selectionArgs = {
-                Integer.toString(mNoteId)
-        };
-
         final ContentValues values = new ContentValues();
         values.put(NoteInfoEntry.COLUMN_COURSE_ID, course_id);
         values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, note_title);
         values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, note_text);
 
+        mNoteUri = ContentUris.withAppendedId(Notes.CONTENT_URI, mNoteId);
 
-        @SuppressLint("StaticFieldLeak")
-        AsyncTask task = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                SQLiteDatabase database = mNoteKeeperOpenHelper.getWritableDatabase();
-                database.update(NoteInfoEntry.TABLE_NAME, values, selection, selectionArgs);
-                return null;
-            }
-        };
-        task.execute();
+        getContentResolver().update(mNoteUri,values,null,null);
 
     }
 
@@ -241,21 +227,17 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void deleteNoteFromDatabase() {
-        final String selection = NoteInfoEntry._ID + " = ?";
-        final String[] selectionArgs = {
-                Integer.toString(mNoteId)
-        };
 
-        @SuppressLint("StaticFieldLeak")
-        AsyncTask task = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                SQLiteDatabase database = mNoteKeeperOpenHelper.getWritableDatabase();
-                database.delete(NoteInfoEntry.TABLE_NAME, selection, selectionArgs);
-                return null;
-            }
-        };
-        task.execute();
+        mNoteUri = ContentUris.withAppendedId(Notes.CONTENT_URI,mNoteId);
+
+       int rowsDeleted  = getContentResolver().delete(mNoteUri,null,null);
+
+        if(rowsDeleted>=1){
+            Toast.makeText(this, "Note Deleted", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Failed to delete Note...", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
