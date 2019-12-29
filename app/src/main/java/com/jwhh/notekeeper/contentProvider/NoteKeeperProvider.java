@@ -1,6 +1,8 @@
 package com.jwhh.notekeeper.contentProvider;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -18,6 +20,7 @@ import com.jwhh.notekeeper.database.NoteKeeperOpenHelper;
 
 public class NoteKeeperProvider extends ContentProvider {
 
+    public static final String MIME_VENDOR_TYPE = "vnd." + NoteKeeperProviderContract.AUTHORITY + ".";
     NoteKeeperOpenHelper mOpenHelper;
     public static UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -25,12 +28,15 @@ public class NoteKeeperProvider extends ContentProvider {
 
     private static final int NOTES = 1;
 
-    private static final int NOTES_EXPANDED = 3 ;
+    private static final int NOTES_EXPANDED = 2;
 
-    static{
+    private static final int NOTES_ROW = 3;
+
+    static {
         sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Courses.PATH, COURSES);
         sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.PATH, NOTES);
         sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.PATH_EXPANDED, NOTES_EXPANDED);
+        sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.PATH + "/#", NOTES_ROW);
     }
 
     public NoteKeeperProvider() {
@@ -44,15 +50,68 @@ public class NoteKeeperProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        // TODO: Implement this to handle requests for the MIME type of the data
-        // at the given URI.
-        throw new UnsupportedOperationException("Not yet implemented");
+        String mimeType = "";
+
+        int match = sUriMatcher.match(uri);
+
+            switch (match) {
+
+                case COURSES:
+
+                    mimeType = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +
+                            MIME_VENDOR_TYPE + Courses.PATH;
+
+                    break;
+                case NOTES:
+
+                    mimeType = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +
+                            MIME_VENDOR_TYPE + Notes.PATH;
+
+                    break;
+                case NOTES_EXPANDED:
+
+                    mimeType = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +
+                            MIME_VENDOR_TYPE + Notes.PATH_EXPANDED;
+
+                    break;
+                case NOTES_ROW:
+
+                    mimeType = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" +
+                            MIME_VENDOR_TYPE + Notes.PATH;
+
+                    break;
+
+            }
+
+        return mimeType;
     }
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
-        throw new UnsupportedOperationException("Not yet implemented");
+        SQLiteDatabase database = mOpenHelper.getWritableDatabase();
+        Uri insertUri = null;
+
+        long rowId;
+
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            case NOTES:
+                rowId = database.insert(NoteInfoEntry.TABLE_NAME, null, values);
+
+                insertUri = ContentUris.withAppendedId(Notes.CONTENT_URI, rowId);
+                break;
+            case COURSES:
+                rowId = database.insert(CourseInfoEntry.TABLE_NAME, null, values);
+
+                insertUri = ContentUris.withAppendedId(Courses.CONTENT_URI, rowId);
+                break;
+            case NOTES_EXPANDED:
+                break;
+
+
+        }
+
+        return insertUri;
     }
 
     @Override
@@ -71,19 +130,32 @@ public class NoteKeeperProvider extends ContentProvider {
 
         int match = sUriMatcher.match(uri);
 
-        switch(match){
+        switch (match) {
             case COURSES:
-                cursor = database.query(CourseInfoEntry.TABLE_NAME,projection, selection,selectionArgs,
-                        null,null,sortOrder);
+                cursor = database.query(CourseInfoEntry.TABLE_NAME, projection, selection, selectionArgs,
+                        null, null, sortOrder);
                 break;
 
             case NOTES:
-                cursor = database.query(NoteInfoEntry.TABLE_NAME,projection, selection,selectionArgs,
-                        null,null,sortOrder);
+                cursor = database.query(NoteInfoEntry.TABLE_NAME, projection, selection, selectionArgs,
+                        null, null, sortOrder);
                 break;
 
             case NOTES_EXPANDED:
-                cursor = notesExpandedQuery(database, projection,selection,selectionArgs,sortOrder);
+                cursor = notesExpandedQuery(database, projection, selection, selectionArgs, sortOrder);
+                break;
+
+            case NOTES_ROW:
+
+                long parseId = ContentUris.parseId(uri);
+
+                String rowSelection = Notes._ID + " = ? ";
+                String[] rowSelectionArgs = {
+                        Long.toString(parseId)
+                };
+
+                cursor = database.query(NoteInfoEntry.TABLE_NAME, projection, rowSelection, rowSelectionArgs,
+                        null, null, null);
                 break;
         }
 
@@ -97,17 +169,17 @@ public class NoteKeeperProvider extends ContentProvider {
 
         String[] columns = new String[projection.length];
 
-        for (int index = 0; index<projection.length; index++){
+        for (int index = 0; index < projection.length; index++) {
 
-            columns[index] = projection[index].equals(BaseColumns._ID) ||  projection[index].equals(Notes.COLUMN_COURSE_ID)?
+            columns[index] = projection[index].equals(BaseColumns._ID) || projection[index].equals(Notes.COLUMN_COURSE_ID) ?
                     NoteInfoEntry.getQName(projection[index]) : projection[index];
         }
 
-        String tablesWithJoin = NoteInfoEntry.TABLE_NAME +" JOIN " + CourseInfoEntry.TABLE_NAME + " ON " +
+        String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN " + CourseInfoEntry.TABLE_NAME + " ON " +
                 NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID) + " = " + CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_ID);
 
-        return database.query(tablesWithJoin,columns,selection,selectionArgs, null,null, sortOrder);
-     }
+        return database.query(tablesWithJoin, columns, selection, selectionArgs, null, null, sortOrder);
+    }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection,
