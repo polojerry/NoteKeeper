@@ -1,5 +1,7 @@
 package com.jwhh.notekeeper.ui;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -54,6 +57,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final String PRIMARY_NOTIFICATION_CHANNEL_ID = "primary_notification_channel";
+
+
     private NoteRecyclerAdapter mNoteRecyclerAdapter;
     private RecyclerView mRecyclerViewItems;
     private LinearLayoutManager mNotesLayoutManager;
@@ -66,6 +72,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        createNotificationChannel();
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -278,6 +287,25 @@ public class MainActivity extends AppCompatActivity
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         if (loader.getId() == LOADER_NOTES) {
             mNoteRecyclerAdapter.swapCursor(null);
+        }
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            CharSequence name = "NoteKeeper Notification";
+            String description = "Notifications for NoteKeeper";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel channel = new NotificationChannel(PRIMARY_NOTIFICATION_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            assert notificationManager != null;
+            notificationManager.createNotificationChannel(channel);
         }
     }
 }

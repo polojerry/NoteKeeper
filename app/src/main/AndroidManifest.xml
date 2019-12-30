@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.jwhh.notekeeper">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:fullBackupContent="true"
@@ -16,7 +18,7 @@
             android:name=".contentProvider.NoteKeeperProvider"
             android:authorities="com.jwhh.notekeeper.provider"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true" />
 
         <activity
             android:name=".ui.SettingsActivity"

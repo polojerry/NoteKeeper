@@ -1,6 +1,8 @@
 package com.jwhh.notekeeper.ui;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -8,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -296,9 +299,19 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
                 break;
             case R.id.action_next:
                 nextNote();
+                break;
+            case R.id.action_set_reminder:
+                setReminderNotification();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void setReminderNotification() {
+        NoteReminderNotification.notify(this,"Android Assync",0);
+    }
+
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -427,4 +440,5 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
     }
+
 }
