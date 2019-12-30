@@ -47,10 +47,14 @@ public class NoteReminderNotification {
      *
      * @see #cancel(Context)
      */
-    public static void notify(final Context context, final String noteText, final String noteTitle) {
+    public static void notify(final Context context, final String noteTitle, final String noteText, int noteId ) {
         final Resources res = context.getResources();
 
         String tittle = "Review Note";
+
+        Intent noteIntent = new Intent(context, NoteActivity.class);
+        noteIntent.putExtra(NoteActivity.NOTE_ID, noteId);
+
         // This image is used as the notification's large icon (thumbnail).
         // TODO: Remove this if your notification has no relevant thumbnail.
         final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.logo);
@@ -106,7 +110,7 @@ public class NoteReminderNotification {
                         PendingIntent.getActivity(
                                 context,
                                 0,
-                                new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com")),
+                                noteIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT))
 
                 // Automatically dismiss the notification when it is touched.
@@ -128,7 +132,7 @@ public class NoteReminderNotification {
 
     /**
      * Cancels any notifications of this type previously shown using
-     * {@link #notify(Context, String)}.
+     * {@link #notify(Context, String,String, int)}.
      */
     @TargetApi(Build.VERSION_CODES.ECLAIR)
     public static void cancel(final Context context) {

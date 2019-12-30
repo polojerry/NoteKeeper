@@ -1,16 +1,10 @@
 package com.jwhh.notekeeper.ui;
 
-import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -124,12 +118,6 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void saveOriginalDisplayValues() {
 
-        /*if (mIsNewNote)
-            return;
-
-        mViewModel.mOriginalCourseId = mNote.getCourse().getCourseId();
-        mViewModel.mOriginalNoteTittle = mNote.getTitle();
-        mViewModel.mOriginalNoteText = mNote.getText();*/
     }
 
     public void saveNoteToDatabase(String course_id, String note_title, String note_text) {
@@ -310,7 +298,10 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private void setReminderNotification() {
         String noteTitle = mNoteTittle.getText().toString().trim();
         String noteText = mNoteText.getText().toString().trim();
-        NoteReminderNotification.notify(this,noteText,noteTitle);
+        int noteId = (int) ContentUris.parseId(mNoteUri);
+
+
+        NoteReminderNotification.notify(this,noteTitle,noteText,noteId);
     }
 
 
