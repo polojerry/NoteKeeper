@@ -1,10 +1,12 @@
 package com.jwhh.notekeeper.ui;
 
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -193,8 +195,25 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, "");
         values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, "");
 
-        mNoteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
-        mNoteId = (int)ContentUris.parseId(mNoteUri);
+        @SuppressLint("StaticFieldLeak") AsyncTask<ContentValues, Void, Uri> task  = new AsyncTask<ContentValues, Void, Uri>() {
+            @Override
+            protected Uri doInBackground(ContentValues... contentValues) {
+                ContentValues insertValues = contentValues[0];
+
+                Uri uri = getContentResolver().insert(Notes.CONTENT_URI, insertValues);
+
+                return uri;
+            }
+
+            @Override
+            protected void onPostExecute(Uri uri) {
+                mNoteUri =uri;
+                mNoteId = (int)ContentUris.parseId(mNoteUri);
+            }
+        };
+
+        task.execute(values);
+
     }
 
     @Override

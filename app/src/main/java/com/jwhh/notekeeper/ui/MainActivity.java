@@ -14,6 +14,7 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import android.os.StrictMode;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -25,6 +26,7 @@ import androidx.core.view.GravityCompat;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.jwhh.notekeeper.BuildConfig;
 import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Notes;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         createNotificationChannel();
-
+        enforceStrictModePolicy();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, NoteActivity.class));
             }
         });
+
 
         PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false);
 
@@ -101,6 +104,17 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         initializeDisplayNotes();
+    }
+
+    private void enforceStrictModePolicy() {
+        if(BuildConfig.DEBUG){
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build();
+
+            StrictMode.setThreadPolicy(policy);
+        }
     }
 
 
