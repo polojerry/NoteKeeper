@@ -26,7 +26,6 @@ import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Courses;
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Notes;
 import com.jwhh.notekeeper.dataModels.CourseInfo;
-import com.jwhh.notekeeper.dataModels.NoteInfo;
 import com.jwhh.notekeeper.database.DataManager;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.NoteInfoEntry;
@@ -38,7 +37,6 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
     public static final String NOTE_ID = "com.jwhh.notekeeper.dataModels.NOTE_ID";
     public static final int ID_NOT_SET = -1;
-    private NoteInfo mNote;
     private boolean mIsNewNote;
 
     private AppCompatSpinner mSpinnerCourses;
@@ -138,12 +136,10 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         int courseIdPos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
         int noteTittlePos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
         int noteTextPos = mNoteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
-        int noteIdPos = mNoteCursor.getColumnIndex(NoteInfoEntry._ID);
 
         String courseId = mNoteCursor.getString(courseIdPos);
         String noteTittle = mNoteCursor.getString(noteTittlePos);
         String noteText = mNoteCursor.getString(noteTextPos);
-        int noteId = mNoteCursor.getInt(noteIdPos);
 
 
         final int courseIndex = getIndexOfCourse(courseId);
@@ -198,6 +194,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, "");
 
         mNoteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
+        mNoteId = (int)ContentUris.parseId(mNoteUri);
     }
 
     @Override
@@ -233,9 +230,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void restoreOriginalNoteState() {
-        mNote.setCourse(DataManager.getInstance().getCourse(mViewModel.mOriginalCourseId));
-        mNote.setTitle(mViewModel.mOriginalNoteTittle);
-        mNote.setText(mViewModel.mOriginalNoteText);
+        finish();
     }
 
     private void saveNote() {
@@ -254,9 +249,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         cursor.moveToPosition(selectedPosition);
 
         int courseIdPos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_ID);
-        String courseId = cursor.getString(courseIdPos);
 
-        return courseId;
+        return cursor.getString(courseIdPos);
     }
 
     @Override
@@ -323,7 +317,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         mNoteId += 1;
         saveNote();
 
-        mNote = DataManager.getInstance().getNotes().get(mNoteId);
+        //mNote = DataManager.getInstance().getNotes().get(mNoteId);
         saveOriginalDisplayValues();
         invalidateOptionsMenu();
     }

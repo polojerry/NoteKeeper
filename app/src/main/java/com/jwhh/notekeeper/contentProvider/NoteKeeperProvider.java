@@ -137,7 +137,6 @@ public class NoteKeeperProvider extends ContentProvider {
             case NOTES_EXPANDED:
                 break;
 
-
         }
 
         return insertUri;
