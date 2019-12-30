@@ -308,7 +308,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void setReminderNotification() {
-        NoteReminderNotification.notify(this,"Android Assync",0);
+        String noteText = mNoteText.getText().toString().trim();
+        NoteReminderNotification.notify(this,noteText);
     }
 
 

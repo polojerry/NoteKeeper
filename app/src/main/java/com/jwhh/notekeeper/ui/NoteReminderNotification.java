@@ -17,7 +17,6 @@ import androidx.core.app.NotificationCompat;
 
 import com.jwhh.notekeeper.R;
 
-import static com.jwhh.notekeeper.ui.MainActivity.*;
 import static com.jwhh.notekeeper.ui.MainActivity.PRIMARY_NOTIFICATION_CHANNEL_ID;
 
 /**
@@ -49,22 +48,16 @@ public class NoteReminderNotification {
      * @see #cancel(Context)
      */
     public static void notify(final Context context,
-                              final String exampleString, final int number) {
+                              final String noteText) {
         final Resources res = context.getResources();
 
+        String tittle = "Review Note";
         // This image is used as the notification's large icon (thumbnail).
         // TODO: Remove this if your notification has no relevant thumbnail.
-        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.example_picture);
+        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.logo);
 
 
-        final String ticker = exampleString;
-        final String title = res.getString(
-                R.string.note_reminder_notification_title_template, exampleString);
-        final String text = res.getString(
-                R.string.note_reminder_notification_placeholder_text_template, exampleString);
-        final String notificationChannel = PRIMARY_NOTIFICATION_CHANNEL_ID;
-
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context,notificationChannel)
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PRIMARY_NOTIFICATION_CHANNEL_ID)
 
                 // Set appropriate defaults for the notification light, sound,
                 // and vibration.
@@ -73,8 +66,8 @@ public class NoteReminderNotification {
                 // Set required fields, including the small icon, the
                 // notification title, and text.
                 .setSmallIcon(R.drawable.ic_stat_note_reminder)
-                .setContentTitle(title)
-                .setContentText(text)
+                .setContentTitle(tittle)
+                .setContentText(noteText)
 
                 // All fields below this line are optional.
 
@@ -87,11 +80,11 @@ public class NoteReminderNotification {
                 .setLargeIcon(picture)
 
                 // Set ticker text (preview) information for this notification.
-                .setTicker(ticker)
+                .setTicker(tittle)
 
                 // Show a number. This is useful when stacking notifications of
                 // a single type.
-                .setNumber(number)
+
 
                 // If this notification relates to a past or upcoming event, you
                 // should set the relevant time information using the setWhen
@@ -130,7 +123,7 @@ public class NoteReminderNotification {
 
     /**
      * Cancels any notifications of this type previously shown using
-     * {@link #notify(Context, String, int)}.
+     * {@link #notify(Context, String)}.
      */
     @TargetApi(Build.VERSION_CODES.ECLAIR)
     public static void cancel(final Context context) {
