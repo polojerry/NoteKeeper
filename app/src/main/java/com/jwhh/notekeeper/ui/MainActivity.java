@@ -14,6 +14,8 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.view.MenuItem;
 import android.view.View;
@@ -169,6 +171,21 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         LoaderManager.getInstance(this).restartLoader(LOADER_NOTES, null, this);
         updateNavHeader();
+        openAndCloseDrawer();
+    }
+
+    private void openAndCloseDrawer() {
+
+        final DrawerLayout navDrawer= findViewById(R.id.drawer_layout);
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                navDrawer.openDrawer(GravityCompat.START);
+
+
+            }
+        },1000);
     }
 
     private void updateNavHeader() {
