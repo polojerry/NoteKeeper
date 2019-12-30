@@ -8,9 +8,6 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.jwhh.notekeeper.R;
 
-import java.util.prefs.PreferenceChangeEvent;
-import java.util.prefs.PreferenceChangeListener;
-
 public class SettingsActivity extends AppCompatActivity {
 
     @Override

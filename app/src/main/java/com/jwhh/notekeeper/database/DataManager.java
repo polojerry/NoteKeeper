@@ -21,8 +21,7 @@ public class DataManager {
     public static DataManager getInstance() {
         if(ourInstance == null) {
             ourInstance = new DataManager();
-            /*ourInstance.initializeCourses();
-            ourInstance.initializeExampleNotes();*/
+
         }
         return ourInstance;
     }
@@ -95,14 +94,6 @@ public class DataManager {
             dataManager.mCourses.add(course);
         }
         coursesCursor.close();
-    }
-
-    public String getCurrentUserName() {
-        return "Jim Wilson";
-    }
-
-    public String getCurrentUserEmail() {
-        return "jimw@jwhh.com";
     }
 
     public List<NoteInfo> getNotes() {

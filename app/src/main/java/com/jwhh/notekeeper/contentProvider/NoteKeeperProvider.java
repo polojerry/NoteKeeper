@@ -12,9 +12,8 @@ import android.provider.BaseColumns;
 
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Courses;
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Notes;
-import com.jwhh.notekeeper.dataModels.CourseInfo;
-import com.jwhh.notekeeper.dataModels.NoteInfo;
-import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract;
+
+
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperOpenHelper;
@@ -241,9 +240,6 @@ public class NoteKeeperProvider extends ContentProvider {
                 };
 
                 rowsUpdated = database.update(NoteInfoEntry.TABLE_NAME,values,noteRowSelection,noteRowSelectionArgs);
-                break;
-
-            case NOTES_EXPANDED:
                 break;
 
         }
