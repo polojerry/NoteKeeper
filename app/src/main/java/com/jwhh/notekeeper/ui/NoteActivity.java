@@ -65,6 +65,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private boolean mLoadCourseFinished;
     private boolean mNoteLoadFinished;
     private Uri mNoteUri;
+    private Cursor mCoursesCursor;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -372,11 +373,14 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void sendMail() {
-
-        CourseInfo course = (CourseInfo) mSpinnerCourses.getSelectedItem();
+        String courseTittle = selectedCourseTitle();
+        String noteText = mNoteText.getText().toString();
         String subject = mNoteTittle.getText().toString();
+
+
         String textBody = "Check out what i learnt from Pluralsite Course \"" + "" +
-                course.getTitle() + " \" \n" + mNoteText.getText().toString();
+                courseTittle + " \" \n" + noteText + "\n";
+
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("message/rfc2822");
@@ -384,6 +388,18 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         intent.putExtra(Intent.EXTRA_TEXT, textBody);
 
         startActivity(intent);
+
+    }
+
+    private String selectedCourseTitle() {
+        int selectedPosition = mSpinnerCourses.getSelectedItemPosition();
+
+        Cursor cursor = mAdapterSpinnerCourses.getCursor();
+        cursor.moveToPosition(selectedPosition);
+
+        int courseTittlePos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_TITLE);
+
+        return cursor.getString(courseTittlePos);
 
     }
 
@@ -445,6 +461,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void loadFinishedCourses(Cursor data) {
+        mCoursesCursor = data;
         mAdapterSpinnerCourses.swapCursor(data);
         displayNoteWhenLoadFinished();
     }

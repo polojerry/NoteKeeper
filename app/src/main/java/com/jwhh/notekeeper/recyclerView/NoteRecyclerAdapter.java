@@ -12,7 +12,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jwhh.notekeeper.R;
-import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.jwhh.notekeeper.ui.NoteActivity;
