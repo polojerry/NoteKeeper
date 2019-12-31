@@ -376,10 +376,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         String courseTittle = selectedCourseTitle();
         String noteText = mNoteText.getText().toString();
         String subject = mNoteTittle.getText().toString();
-
-
         String textBody = "Check out what i learnt from Pluralsite Course \"" + "" +
-                courseTittle + " \" \n" + noteText + "\n";
+                courseTittle + " \" \n" + noteText;
 
 
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -397,9 +395,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         Cursor cursor = mAdapterSpinnerCourses.getCursor();
         cursor.moveToPosition(selectedPosition);
 
-        int courseTittlePos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_TITLE);
-
-        return cursor.getString(courseTittlePos);
+        int courseIdPos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_TITLE);
+        return cursor.getString(courseIdPos);
 
     }
 
