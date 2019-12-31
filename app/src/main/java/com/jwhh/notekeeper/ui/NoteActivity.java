@@ -3,7 +3,6 @@ package com.jwhh.notekeeper.ui;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -31,7 +30,6 @@ import androidx.loader.content.Loader;
 import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Courses;
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Notes;
-import com.jwhh.notekeeper.dataModels.CourseInfo;
 import com.jwhh.notekeeper.database.DataManager;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.NoteInfoEntry;
@@ -70,6 +68,15 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        String courseId = selectedCourseId();
+        String noteTitle = mNoteTittle.getText().toString();
+        String noteText = mNoteText.getText().toString();
+
+        outState.putString(mViewModel.mOriginalCourseId,courseId);
+        outState.putString(mViewModel.mOriginalNoteTittle,noteTitle);
+        outState.putString(mViewModel.mOriginalNoteText,noteText);
+
         mViewModel.saveInstanceState(outState);
     }
 

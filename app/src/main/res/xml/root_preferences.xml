@@ -43,18 +43,15 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory app:title="@string/notification_header">
 
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+        <ListPreference
+            app:key="pref_notification_duration"
+            app:title="@string/pref_title_notification_duration"
+            app:entries="@array/pref_entries_notification_duration"
+            app:entryValues="@array/pref_values_notification_duration_values"
+            app:defaultValue="@integer/pref_default_value_notification_duration"
+            app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
 

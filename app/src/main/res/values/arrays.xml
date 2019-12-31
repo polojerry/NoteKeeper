@@ -12,6 +12,22 @@
         <item>https://twitter.com</item>
     </string-array>
 
+    <string-array name="pref_entries_notification_duration">
+        <item>30 Minutes</item>
+        <item>1 Hour</item>
+        <item>2 Hours</item>
+        <item>4 Hours</item>
+        <item>12 Hours</item>
+    </string-array>
+
+    <string-array name="pref_values_notification_duration_values">
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+        <item>240</item>
+        <item>480</item>
+    </string-array>
+
 
     <!-- Reply Preference -->
     <string-array name="reply_entries">

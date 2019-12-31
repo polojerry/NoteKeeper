@@ -74,5 +74,7 @@
     </string>
     <string name="action_back_up_notes">Back Up Notes</string>
     <string name="action_upload_notes">Upload Notes</string>
+    <string name="notification_header">Notifications</string>
+    <string name="pref_title_notification_duration">Notification Duration</string>
 
 </resources>
