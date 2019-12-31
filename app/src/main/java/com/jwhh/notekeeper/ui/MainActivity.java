@@ -2,6 +2,9 @@ package com.jwhh.notekeeper.ui;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,6 +43,7 @@ import com.jwhh.notekeeper.recyclerView.CourseRecyclerAdapter;
 import com.jwhh.notekeeper.recyclerView.NoteRecyclerAdapter;
 import com.jwhh.notekeeper.utils.NoteBackup;
 import com.jwhh.notekeeper.utils.NoteBackupService;
+import com.jwhh.notekeeper.utils.NoteUploaderJobService;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -71,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     private CourseRecyclerAdapter mCourseRecyclerAdapter;
     private NoteKeeperOpenHelper mDbOpenHelper;
     private int LOADER_NOTES = 0;
+    private int NOTE_UPLOADER_JOB_ID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,6 +245,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_back_up_notes:
                 backUpNotes();
                 break;
+            case R.id.action_upload_notes:
+                scheduleNotesUpload();
+                break;
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -247,6 +255,21 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private void scheduleNotesUpload() {
+
+        ComponentName componentName = new ComponentName(this, NoteUploaderJobService.class);
+
+        NOTE_UPLOADER_JOB_ID = 1;
+        JobInfo jobInfo = new JobInfo.Builder(NOTE_UPLOADER_JOB_ID,componentName)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .build();
+
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(jobInfo);
+
+        
     }
 
     private void backUpNotes() {
