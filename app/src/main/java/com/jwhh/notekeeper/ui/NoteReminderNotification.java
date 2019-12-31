@@ -14,6 +14,8 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
 import com.jwhh.notekeeper.R;
+import com.jwhh.notekeeper.utils.NoteBackup;
+import com.jwhh.notekeeper.utils.NoteBackupService;
 
 import static com.jwhh.notekeeper.ui.MainActivity.PRIMARY_NOTIFICATION_CHANNEL_ID;
 
@@ -53,10 +55,12 @@ public class NoteReminderNotification {
         Intent noteIntent = new Intent(context, NoteActivity.class);
         noteIntent.putExtra(NoteActivity.NOTE_ID, noteId);
 
-        // This image is used as the notification's large icon (thumbnail).
-        // TODO: Remove this if your notification has no relevant thumbnail.
-        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.logo);
+        Intent backUpNotesIntent = new Intent(context, NoteBackupService.class);
+        backUpNotesIntent.putExtra(NoteBackupService.EXTRA_PARAM_COURSE_ID, NoteBackup.ALL_COURSES);
+        
 
+        // This image is used as the notification's large icon (thumbnail).
+        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.logo);
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PRIMARY_NOTIFICATION_CHANNEL_ID)
 
@@ -118,6 +122,16 @@ public class NoteReminderNotification {
                                 context,
                                 0,
                                 new Intent(context,MainActivity.class),
+                                PendingIntent.FLAG_UPDATE_CURRENT)
+                ))
+
+                .addAction(new NotificationCompat.Action(
+                        0,
+                        "Backup All Notes",
+                        PendingIntent.getService(
+                                context,
+                                0,
+                                backUpNotesIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT)
                 ))
 
