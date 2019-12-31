@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SimpleCursorAdapter;
@@ -320,7 +321,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         String noteText = mNoteText.getText().toString().trim();
         int noteId = (int) ContentUris.parseId(mNoteUri);
 
-        Intent intent = new Intent();
+        Intent intent = new Intent(this, NoteReminderReceiver.class);
         intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TITLE, noteTitle);
         intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TEXT, noteText);
         intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_ID, noteId);
@@ -332,6 +333,13 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        long currentTimeInMilliseconds = SystemClock.elapsedRealtime();
+        long TEN_SECONDS = 10 * 1000;
+        long alarmTime = currentTimeInMilliseconds + TEN_SECONDS;
+
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME,alarmTime,pendingIntent);
+
     }
 
 
