@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity
     private void backUpNotes() {
 
         Intent backUpNotesIntent = new Intent(this, NoteBackupService.class);
-        backUpNotesIntent.putExtra(NoteBackupService.EXTRA_PARAM_COURSE_ID, NoteBackup.ALL_COURSES);
+        backUpNotesIntent.putExtra(NoteBackupService.EXTRA_COURSE_ID, NoteBackup.ALL_COURSES);
         startService(backUpNotesIntent);
     }
 
