@@ -1,6 +1,9 @@
 package com.jwhh.notekeeper.ui;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -33,6 +36,7 @@ import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperOpenHelper;
 import com.jwhh.notekeeper.utils.CourseEventBroadcastHelper;
+import com.jwhh.notekeeper.utils.NoteReminderReceiver;
 import com.jwhh.notekeeper.viewModels.NoteActivityViewModel;
 
 
@@ -316,8 +320,18 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         String noteText = mNoteText.getText().toString().trim();
         int noteId = (int) ContentUris.parseId(mNoteUri);
 
+        Intent intent = new Intent();
+        intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TITLE, noteTitle);
+        intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TEXT, noteText);
+        intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_ID, noteId);
 
-        NoteReminderNotification.notify(this,noteTitle,noteText,noteId);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     }
 
 
