@@ -32,6 +32,7 @@ import com.jwhh.notekeeper.database.DataManager;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperOpenHelper;
+import com.jwhh.notekeeper.utils.CourseEventBroadcastHelper;
 import com.jwhh.notekeeper.viewModels.NoteActivityViewModel;
 
 
@@ -155,6 +156,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mNoteTittle.setText(noteTittle);
         mNoteText.setText(noteText);
+
+        CourseEventBroadcastHelper.sendEventBroadcast(this,courseId,"Editing Note");
     }
 
     private int getIndexOfCourse(String courseId) {
