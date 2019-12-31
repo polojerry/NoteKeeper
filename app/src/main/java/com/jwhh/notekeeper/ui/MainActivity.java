@@ -106,6 +106,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         initializeDisplayNotes();
+
+        openAndCloseDrawer();
     }
 
     private void enforceStrictModePolicy() {
@@ -171,7 +173,6 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         LoaderManager.getInstance(this).restartLoader(LOADER_NOTES, null, this);
         updateNavHeader();
-        openAndCloseDrawer();
     }
 
     private void openAndCloseDrawer() {
@@ -226,13 +227,27 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         int id = item.getItemId();
-        if ( id== R.id.action_settings) {
-            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-        }else if(id == R.id.action_delete_notes){
-            deleteNotesFromDatabase();
+
+        switch(id){
+            case R.id.action_settings:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                break;
+            case R.id.action_delete_notes:
+                deleteNotesFromDatabase();;
+                break;
+            case R.id.action_back_up_notes:
+                backUpNotes();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+
 
         }
         return super.onOptionsItemSelected(item);
+
+    }
+
+    private void backUpNotes() {
     }
 
     private void deleteNotesFromDatabase() {
