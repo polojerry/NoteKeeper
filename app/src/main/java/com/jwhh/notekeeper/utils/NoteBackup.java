@@ -15,7 +15,7 @@ import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Notes;
 public class NoteBackup {
     public static final String ALL_COURSES = "ALL_COURSES";
     private static final String TAG = NoteBackup.class.getSimpleName();
-    private static Context mContext;
+    static Context mContext;
 
     public static void doBackup(Context context, String backupCourseId) {
 

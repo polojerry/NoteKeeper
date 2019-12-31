@@ -56,8 +56,8 @@ public class NoteReminderNotification {
         noteIntent.putExtra(NoteActivity.NOTE_ID, noteId);
 
         Intent backUpNotesIntent = new Intent(context, NoteBackupService.class);
-        backUpNotesIntent.putExtra(NoteBackupService.EXTRA_PARAM_COURSE_ID, NoteBackup.ALL_COURSES);
-        
+        backUpNotesIntent.putExtra(NoteBackupService.EXTRA_COURSE_ID, NoteBackup.ALL_COURSES);
+
 
         // This image is used as the notification's large icon (thumbnail).
         final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.logo);
