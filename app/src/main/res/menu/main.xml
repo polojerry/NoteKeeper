@@ -10,6 +10,13 @@
         android:icon="@drawable/ic_delete_black_24dp"/>
 
     <item
+        android:id="@+id/action_back_up_notes"
+        android:orderInCategory="100"
+        android:title="@string/action_back_up_notes"
+        app:showAsAction="ifRoom|withText"
+        android:icon="@drawable/ic_cloud_upload_black_24dp"/>
+
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
