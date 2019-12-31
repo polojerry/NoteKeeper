@@ -19,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,8 +75,9 @@ public class MainActivity extends AppCompatActivity
     private GridLayoutManager mCoursesLayoutManager;
     private CourseRecyclerAdapter mCourseRecyclerAdapter;
     private NoteKeeperOpenHelper mDbOpenHelper;
+
     private int LOADER_NOTES = 0;
-    private int NOTE_UPLOADER_JOB_ID;
+    private int NOTE_UPLOADER_JOB_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -259,11 +261,15 @@ public class MainActivity extends AppCompatActivity
 
     private void scheduleNotesUpload() {
 
+        PersistableBundle bundle = new PersistableBundle();
+        bundle.putString(NoteUploaderJobService.EXTRA_JOB_DATA, Notes.CONTENT_URI.toString());
+
+
         ComponentName componentName = new ComponentName(this, NoteUploaderJobService.class);
 
-        NOTE_UPLOADER_JOB_ID = 1;
         JobInfo jobInfo = new JobInfo.Builder(NOTE_UPLOADER_JOB_ID,componentName)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setExtras(bundle)
                 .build();
 
         JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
