@@ -38,6 +38,8 @@ import com.jwhh.notekeeper.database.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.jwhh.notekeeper.database.NoteKeeperOpenHelper;
 import com.jwhh.notekeeper.recyclerView.CourseRecyclerAdapter;
 import com.jwhh.notekeeper.recyclerView.NoteRecyclerAdapter;
+import com.jwhh.notekeeper.utils.NoteBackup;
+import com.jwhh.notekeeper.utils.NoteBackupService;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -248,6 +250,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void backUpNotes() {
+
+        Intent backUpNotesIntent = new Intent(this, NoteBackupService.class);
+        backUpNotesIntent.putExtra(NoteBackupService.EXTRA_PARAM_COURSE_ID, NoteBackup.ALL_COURSES);
+        startService(backUpNotesIntent);
     }
 
     private void deleteNotesFromDatabase() {

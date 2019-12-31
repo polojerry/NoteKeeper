@@ -3,6 +3,7 @@ package com.jwhh.notekeeper.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Notes;
 
@@ -14,8 +15,12 @@ import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Notes;
 public class NoteBackup {
     public static final String ALL_COURSES = "ALL_COURSES";
     private static final String TAG = NoteBackup.class.getSimpleName();
+    private static Context mContext;
 
     public static void doBackup(Context context, String backupCourseId) {
+
+        mContext = context;
+
         String[] columns = {
                 Notes.COLUMN_COURSE_ID,
                 Notes.COLUMN_NOTE_TITLE,
@@ -53,7 +58,9 @@ public class NoteBackup {
     private static void simulateLongRunningWork() {
         try {
             Thread.sleep(1000);
-        } catch(Exception ex) {}
+        } catch(Exception ex) {
+            Toast.makeText(mContext, "Exception:::: " + ex.getLocalizedMessage() , Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
