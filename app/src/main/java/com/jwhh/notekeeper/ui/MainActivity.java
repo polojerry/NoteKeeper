@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
             case R.id.action_delete_notes:
-                deleteNotesFromDatabase();;
+                deleteNotesFromDatabase();
                 break;
             case R.id.action_back_up_notes:
                 backUpNotes();
@@ -259,7 +259,6 @@ public class MainActivity extends AppCompatActivity
 
         PersistableBundle bundle = new PersistableBundle();
         bundle.putString(NoteUploaderJobService.EXTRA_JOB_DATA, Notes.CONTENT_URI.toString());
-
 
         ComponentName componentName = new ComponentName(this, NoteUploaderJobService.class);
 

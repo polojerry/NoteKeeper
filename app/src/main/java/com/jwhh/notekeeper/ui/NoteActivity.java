@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -26,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
 
 import com.jwhh.notekeeper.R;
 import com.jwhh.notekeeper.contentProvider.NoteKeeperProviderContract.Courses;
@@ -318,13 +320,13 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
                 nextNote();
                 break;
             case R.id.action_set_reminder:
-                setReminderNotification();
+                scheduleReminderNotification();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void setReminderNotification() {
+    private void scheduleReminderNotification() {
         String noteTitle = mNoteTittle.getText().toString().trim();
         String noteText = mNoteText.getText().toString().trim();
         int noteId = (int) ContentUris.parseId(mNoteUri);
@@ -342,9 +344,14 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String notificationDurationSetString = sharedPreferences.getString("pref_notification_duration","0");
+        long notificationDurationSet = Long.parseLong(notificationDurationSetString);
+        long durationSetInMilliseconds = notificationDurationSet * 60 * 1000;
+
         long currentTimeInMilliseconds = SystemClock.elapsedRealtime();
-        long TEN_SECONDS = 10 * 1000;
-        long alarmTime = currentTimeInMilliseconds + TEN_SECONDS;
+
+        long alarmTime = currentTimeInMilliseconds + durationSetInMilliseconds;
 
         alarmManager.set(AlarmManager.ELAPSED_REALTIME,alarmTime,pendingIntent);
 
