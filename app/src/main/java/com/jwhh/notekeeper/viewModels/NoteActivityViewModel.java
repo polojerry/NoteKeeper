@@ -12,6 +12,7 @@ public class NoteActivityViewModel extends ViewModel {
 
     public boolean isNewlyCreated = true;
 
+    public String mOriginalNoteId;
     public String mOriginalCourseId;
     public String mOriginalNoteTittle;
     public String mOriginalNoteText;
@@ -23,7 +24,6 @@ public class NoteActivityViewModel extends ViewModel {
     }
 
     public void restoreSavedState(Bundle savedInstanceState) {
-
         mOriginalCourseId = savedInstanceState.getString(ORIGINAL_COURSE_ID);
         mOriginalNoteTittle = savedInstanceState.getString(ORIGINAL_NOTE_TITLE);
         mOriginalNoteText = savedInstanceState.getString(ORIGINAL_NOTE_TEXT);

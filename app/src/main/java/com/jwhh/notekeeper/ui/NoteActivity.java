@@ -74,7 +74,6 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         String courseId = selectedCourseId();
         String noteTitle = mNoteTittle.getText().toString();
         String noteText = mNoteText.getText().toString();
-
         outState.putString(mViewModel.mOriginalCourseId,courseId);
         outState.putString(mViewModel.mOriginalNoteTittle,noteTitle);
         outState.putString(mViewModel.mOriginalNoteText,noteText);
@@ -106,8 +105,10 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mViewModel = viewModelProvider.get(NoteActivityViewModel.class);
 
-        if (!mViewModel.isNewlyCreated && savedInstanceState != null)
+        if (!mViewModel.isNewlyCreated && savedInstanceState != null){
             mViewModel.restoreSavedState(savedInstanceState);
+        }
+
 
 
         mViewModel.isNewlyCreated = false;

@@ -20,13 +20,13 @@
         <item>12 Hours</item>
     </string-array>
 
-    <integer-array name="pref_values_notification_duration_values">
+    <string-array name="pref_values_notification_duration_values">
         <item>30</item>
         <item>60</item>
         <item>120</item>
         <item>240</item>
         <item>480</item>
-    </integer-array>
+    </string-array>
 
 
     <!-- Reply Preference -->
