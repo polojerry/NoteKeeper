@@ -4,6 +4,9 @@
     package="com.jwhh.notekeeper">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -14,10 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
         <receiver
             android:name=".utils.NoteReminderReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true"/>
 
         <service
             android:name=".utils.NoteUploaderJobService"
